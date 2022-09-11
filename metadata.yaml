@@ -3,9 +3,10 @@
 
 name: magma-orchestrator-interface
 display-name: |
-  TEMPLATE-TODO: fill out a display name for the Charmcraft store
+  Magma Orchestrator Interface
 description: |
-  TEMPLATE-TODO: fill out the charm's description
+  This charm library contains the Requires and Provides classes for handling the magma-orchestrator
+  interface.
 summary: |
-  TEMPLATE-TODO: fill out the charm's summary
-
+  This charm library contains the Requires and Provides classes for handling the magma-orchestrator
+  interface.
