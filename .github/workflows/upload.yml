@@ -1,7 +1,7 @@
 name: Upload magma-orchestrator-lib
 
-#on:
-#  push:
+on:
+  push:
 #    branches:
 #      - "main"
 
