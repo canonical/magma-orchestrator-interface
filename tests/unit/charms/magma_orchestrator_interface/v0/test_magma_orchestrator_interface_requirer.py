@@ -27,7 +27,7 @@ class Test(unittest.TestCase):
         self.maxDiff = None
 
     @patch(f"{BASE_CHARM_DIR}._on_orchestrator_available")
-    def test_given_orchestrator_information_in_peer_relation_data_when_relation_changed_then_orchestrator_available_event_emitted(  # noqa: E501
+    def test_given_orchestrator_information_in_relation_data_when_relation_changed_then_orchestrator_available_event_emitted(  # noqa: E501
         self, patch_on_orchestrator_available
     ):
         remote_app = "magma-orc8r-provider"
@@ -67,7 +67,7 @@ class Test(unittest.TestCase):
         assert orchestrator_available_event.fluentd_port == fluentd_port
 
     @patch(f"{BASE_CHARM_DIR}._on_orchestrator_available")
-    def test_given_orchestrator_information_not_in_peer_relation_data_when_relation_changed_then_orchestrator_available_event_not_emitted(  # noqa: E501
+    def test_given_orchestrator_information_not_in_relation_data_when_relation_changed_then_orchestrator_available_event_not_emitted(  # noqa: E501
         self, patch_on_orchestrator_available
     ):
         remote_app = "magma-orc8r-provider"
@@ -82,7 +82,7 @@ class Test(unittest.TestCase):
         patch_on_orchestrator_available.assert_not_called()
 
     @patch(f"{BASE_CHARM_DIR}._on_orchestrator_available")
-    def test_given_orchestrator_information_in_peer_relation_data_is_partial_when_relation_changed_then_orchestrator_available_event_not_emitted(  # noqa: E501
+    def test_given_orchestrator_information_in_relation_data_is_partial_when_relation_changed_then_orchestrator_available_event_not_emitted(  # noqa: E501
         self, patch_on_orchestrator_available
     ):
         remote_app = "magma-orc8r-provider"
