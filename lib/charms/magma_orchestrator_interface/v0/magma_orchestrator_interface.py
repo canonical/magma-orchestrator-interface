@@ -10,7 +10,7 @@ interface.
 From a charm directory, fetch the library using `charmcraft`:
 
 ```shell
-charmcraft fetch-lib charms.magma_orchestrator_interface.v1.magma_orchestrator_interface
+charmcraft fetch-lib charms.magma_orchestrator_interface.v0.magma_orchestrator_interface
 ```
 
 Add the following libraries to the charm's `requirements.txt` file:
@@ -42,12 +42,17 @@ class DummyMagmaOrchestratorRequirerCharm(CharmBase):
         )
 
     def _on_orchestrator_available(self, event: OrchestratorAvailableEvent):
-        pass
+        print(event.root_ca_certificate)
+        print(event.orchestrator_address)
+        print(event.orchestrator_port)
+        print(event.bootstrapper_address)
+        print(event.orchestrator_port)
+        print(event.fluentd_address)
+        print(event.fluentd_port)
 
 
 if __name__ == "__main__":
     main(DummyMagmaOrchestratorRequirerCharm)
-
 ```
 """
 
