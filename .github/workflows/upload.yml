@@ -1,9 +1,9 @@
 name: Upload magma-orchestrator-lib
 
-on:
-  push:
-    branches:
-      - "main"
+#on:
+#  push:
+#    branches:
+#      - "main"
 
 jobs:
   charmhub-upload:
