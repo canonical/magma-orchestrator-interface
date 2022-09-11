@@ -1,0 +1,15 @@
+# Copyright 2022 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+
+name: magma-orchestrator-requirer
+
+description: |
+  Dummy magma orchestrator requirer.
+summary: |
+    Dummy magma orchestrator requirer.
+
+
+requires:
+  orchestrator:
+    interface: magma-orchestrator
