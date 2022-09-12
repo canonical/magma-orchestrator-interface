@@ -110,6 +110,7 @@ REQUIRER_JSON_SCHEMA = {
         },
         "fluentd_address": {
             "type": "string",
+            "format": "uri",
         },
         "fluentd_port": {
             "type": "integer",
