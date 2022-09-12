@@ -26,13 +26,7 @@ class DummyMagmaOrchestratorRequirerCharm(CharmBase):
         )
 
     def _on_orchestrator_available(self, event: OrchestratorAvailableEvent):
-        print(event.root_ca_certificate)
-        print(event.orchestrator_address)
-        print(event.orchestrator_port)
-        print(event.bootstrapper_address)
-        print(event.orchestrator_port)
-        print(event.fluentd_address)
-        print(event.fluentd_port)
+        pass
 
 
 if __name__ == "__main__":

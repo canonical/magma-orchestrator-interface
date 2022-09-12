@@ -19,12 +19,9 @@ BASE_CHARM_DIR = "tests.unit.charms.magma_orchestrator_interface.v0.dummy_requir
 class Test(unittest.TestCase):
     def setUp(self):
         self.relation_name = "orchestrator"
-        self.model_name = "whatever"
         self.harness = testing.Harness(DummyMagmaOrchestratorRequirerCharm)
-        self.harness.set_model_name(name=self.model_name)
         self.addCleanup(self.harness.cleanup)
         self.harness.begin()
-        self.maxDiff = None
 
     @patch(f"{BASE_CHARM_DIR}._on_orchestrator_available")
     def test_given_orchestrator_information_in_relation_data_when_relation_changed_then_orchestrator_available_event_emitted(  # noqa: E501
@@ -45,11 +42,11 @@ class Test(unittest.TestCase):
         remote_app_relation_data = {
             "root_ca_certificate": root_ca_certificate,
             "orchestrator_address": orchestrator_address,
-            "orchestrator_port": orchestrator_port,
+            "orchestrator_port": str(orchestrator_port),
             "bootstrapper_address": bootstrapper_address,
-            "bootstrapper_port": bootstrapper_port,
+            "bootstrapper_port": str(bootstrapper_port),
             "fluentd_address": fluentd_address,
-            "fluentd_port": fluentd_port,
+            "fluentd_port": str(fluentd_port),
         }
         self.harness.update_relation_data(
             relation_id=relation_id, app_or_unit=remote_app, key_values=remote_app_relation_data
@@ -95,9 +92,9 @@ class Test(unittest.TestCase):
         bootstrapper_port = 456
         remote_app_relation_data = {
             "orchestrator_address": orchestrator_address,
-            "orchestrator_port": orchestrator_port,
+            "orchestrator_port": str(orchestrator_port),
             "bootstrapper_address": bootstrapper_address,
-            "bootstrapper_port": bootstrapper_port,
+            "bootstrapper_port": str(bootstrapper_port),
         }
         self.harness.update_relation_data(
             relation_id=relation_id, app_or_unit=remote_app, key_values=remote_app_relation_data
