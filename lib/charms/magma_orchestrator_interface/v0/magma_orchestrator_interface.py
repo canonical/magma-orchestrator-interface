@@ -104,6 +104,7 @@ REQUIRER_JSON_SCHEMA = {
         },
         "bootstrapper_address": {
             "type": "string",
+            "format": "uri",
         },
         "bootstrapper_port": {
             "type": "integer",
