@@ -111,6 +111,8 @@ REQUIRER_JSON_SCHEMA = {
         },
         "bootstrapper_port": {
             "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
         },
         "fluentd_address": {
             "type": "string",
