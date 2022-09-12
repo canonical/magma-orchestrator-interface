@@ -102,6 +102,8 @@ REQUIRER_JSON_SCHEMA = {
         },
         "orchestrator_port": {
             "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
         },
         "bootstrapper_address": {
             "type": "string",
