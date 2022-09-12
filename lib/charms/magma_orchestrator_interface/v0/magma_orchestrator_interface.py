@@ -120,6 +120,8 @@ REQUIRER_JSON_SCHEMA = {
         },
         "fluentd_port": {
             "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
         },
     },
     "required": [
