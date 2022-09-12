@@ -98,6 +98,7 @@ REQUIRER_JSON_SCHEMA = {
         },
         "orchestrator_address": {
             "type": "string",
+            "format": "uri",
         },
         "orchestrator_port": {
             "type": "integer",
