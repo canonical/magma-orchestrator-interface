@@ -1,0 +1,15 @@
+# Copyright 2022 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+
+name: magma-orchestrator-provider
+
+description: |
+  Dummy magma orchestrator provider.
+summary: |
+    Dummy magma orchestrator provider.
+
+
+provides:
+  orchestrator:
+    interface: magma-orchestrator

@@ -238,3 +238,36 @@ class OrchestratorRequires(Object):
             fluentd_address=remote_app_relation_data["fluentd_address"],
             fluentd_port=int(remote_app_relation_data["fluentd_port"]),
         )
+
+
+class OrchestratorProvides(Object):
+    """Class to be instantiated by charms providing connectivity with Orchestrator."""
+
+    def __init__(self, charm: CharmBase, relationship_name: str):
+        """Init."""
+        super().__init__(charm, relationship_name)
+        self.relationship_name = relationship_name
+        self.charm = charm
+
+    def set_orchestrator_information(
+            self,
+            root_ca_certificate: str,
+            orchestrator_address: str,
+            orchestrator_port: int,
+            bootstrapper_address: str,
+            bootstrapper_port: int,
+            fluentd_address: str,
+            fluentd_port: int,
+    ):
+        relation = self.model.get_relation(self.relationship_name)
+        relation.data[self.charm.app].update(
+            {
+                "root_ca_certificate": root_ca_certificate,
+                "orchestrator_address": orchestrator_address,
+                "orchestrator_port": str(orchestrator_port),
+                "bootstrapper_address": bootstrapper_address,
+                "bootstrapper_port": str(bootstrapper_port),
+                "fluentd_address": fluentd_address,
+                "fluentd_port": str(fluentd_port),
+            }
+        )
