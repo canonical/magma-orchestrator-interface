@@ -76,7 +76,7 @@ class Test(unittest.TestCase):
         )
 
         self.harness.update_relation_data(
-            relation_id=relation_id, app_or_unit=remote_app, key_values=dict()
+            relation_id=relation_id, app_or_unit=remote_app, key_values={}
         )
 
         patch_on_orchestrator_available.assert_not_called()
