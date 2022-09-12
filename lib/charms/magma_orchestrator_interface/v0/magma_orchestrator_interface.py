@@ -17,8 +17,8 @@ Add the following libraries to the charm's `requirements.txt` file:
 - jsonschema
 
 ### Requirer charm
-The requirer charm is the charm requiring to connect to an orchestrator from another charm that
-provides this interface.
+The requirer charm is the charm requiring to connect to an instance of Magma Orchestrator
+from another charm that provides this interface.
 
 Example:
 ```python
