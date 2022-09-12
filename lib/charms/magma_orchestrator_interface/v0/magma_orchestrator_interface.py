@@ -71,7 +71,7 @@ LIBAPI = 0
 
 # Increment this PATCH version before using `charmcraft publish-lib` or reset
 # to 0 if you are raising the major API version
-LIBPATCH = 1
+LIBPATCH = 2
 
 
 logger = logging.getLogger(__name__)
@@ -250,16 +250,34 @@ class OrchestratorProvides(Object):
         self.charm = charm
 
     def set_orchestrator_information(
-            self,
-            root_ca_certificate: str,
-            orchestrator_address: str,
-            orchestrator_port: int,
-            bootstrapper_address: str,
-            bootstrapper_port: int,
-            fluentd_address: str,
-            fluentd_port: int,
+        self,
+        root_ca_certificate: str,
+        orchestrator_address: str,
+        bootstrapper_address: str,
+        fluentd_address: str,
+        orchestrator_port: int = 443,
+        bootstrapper_port: int = 443,
+        fluentd_port: int = 24224,
     ):
+        """Sets orchestrator information in application relation data.
+
+        Args:
+            root_ca_certificate: Orchestrator Root CA Certificate
+            orchestrator_address: Orchestrator address (ex. controller.yourdomain.com)
+            bootstrapper_address: Bootstrapper address (ex. bootstrapper-controller.yourdomain.com)
+            fluentd_address: Fluentd Address (ex. fluentd.yourdomain.com)
+            orchestrator_port: Orchestrator port (Default: 443)
+            bootstrapper_port: Bootstrapper port (Default: 443)
+            fluentd_port: Fluentd port (Default: 24224)
+
+        Returns:
+            None
+        """
+        if not self.charm.unit.is_leader():
+            raise RuntimeError("Unit must be leader to set application relation data.")
         relation = self.model.get_relation(self.relationship_name)
+        if not relation:
+            raise RuntimeError(f"Relation {self.relationship_name} not yet created")
         relation.data[self.charm.app].update(
             {
                 "root_ca_certificate": root_ca_certificate,
