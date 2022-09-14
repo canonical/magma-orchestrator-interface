@@ -55,13 +55,13 @@ class Test(unittest.TestCase):
         patch_on_orchestrator_available.assert_called()
         args, _ = patch_on_orchestrator_available.call_args
         orchestrator_available_event = args[0]
-        assert orchestrator_available_event.root_ca_certificate == root_ca_certificate
-        assert orchestrator_available_event.orchestrator_address == orchestrator_address
-        assert orchestrator_available_event.orchestrator_port == orchestrator_port
-        assert orchestrator_available_event.bootstrapper_address == bootstrapper_address
-        assert orchestrator_available_event.bootstrapper_port == bootstrapper_port
-        assert orchestrator_available_event.fluentd_address == fluentd_address
-        assert orchestrator_available_event.fluentd_port == fluentd_port
+        self.assertEqual(orchestrator_available_event.root_ca_certificate, root_ca_certificate)
+        self.assertEqual(orchestrator_available_event.orchestrator_address, orchestrator_address)
+        self.assertEqual(orchestrator_available_event.orchestrator_port, orchestrator_port)
+        self.assertEqual(orchestrator_available_event.bootstrapper_address, bootstrapper_address)
+        self.assertEqual(orchestrator_available_event.bootstrapper_port, bootstrapper_port)
+        self.assertEqual(orchestrator_available_event.fluentd_address, fluentd_address)
+        self.assertEqual(orchestrator_available_event.fluentd_port, fluentd_port)
 
     @patch(f"{BASE_CHARM_DIR}._on_orchestrator_available")
     def test_given_orchestrator_information_not_in_relation_data_when_relation_changed_then_orchestrator_available_event_not_emitted(  # noqa: E501
