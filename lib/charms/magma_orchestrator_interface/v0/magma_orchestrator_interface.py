@@ -249,6 +249,13 @@ class OrchestratorProvides(Object):
         self.relationship_name = relationship_name
         self.charm = charm
 
+    @staticmethod
+    def port_is_valid(port_number: int) -> bool:
+        """Returns whether network port is a valid number."""
+        if port_number < 1 or port_number > 65535:
+            return False
+        return True
+
     def set_orchestrator_information(
         self,
         root_ca_certificate: str,
@@ -275,6 +282,12 @@ class OrchestratorProvides(Object):
         """
         if not self.charm.unit.is_leader():
             raise RuntimeError("Unit must be leader to set application relation data.")
+        if not self.port_is_valid(orchestrator_port):
+            raise ValueError("Orchestrator port is invalid")
+        if not self.port_is_valid(bootstrapper_port):
+            raise ValueError("Bootstrapper port is invalid")
+        if not self.port_is_valid(fluentd_port):
+            raise ValueError("Fluentd port is invalid")
         relation = self.model.get_relation(self.relationship_name)
         if not relation:
             raise RuntimeError(f"Relation {self.relationship_name} not yet created")

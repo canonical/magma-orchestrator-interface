@@ -6,6 +6,7 @@ import unittest
 
 import pytest
 from ops import testing
+from parameterized import parameterized
 
 from tests.unit.charms.magma_orchestrator_interface.v0.dummy_provider_charm.src.charm import (
     DummyMagmaOrchestratorProviderCharm,
@@ -97,3 +98,35 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
                 fluentd_port=9112,
             )
         assert str(e.value) == "Relation orchestrator not yet created"
+
+    @parameterized.expand(
+        [
+            [-1, 5678, 9112, "Orchestrator port is invalid"],
+            [99999, 5678, 9112, "Orchestrator port is invalid"],
+            [1234, -1, 9112, "Bootstrapper port is invalid"],
+            [1234, 99999, 9112, "Bootstrapper port is invalid"],
+            [1234, 5678, -1, "Fluentd port is invalid"],
+            [1234, 5678, 99999, "Fluentd port is invalid"],
+        ]
+    )
+    def test_given_orchestrator_port_is_not_valid_when_set_orchestrator_information_then_value_error_is_raised(  # noqa: E501
+        self,
+        orchestrator_port,
+        bootstrapper_port,
+        fluentd_port,
+        test_expected,
+    ):
+        self.harness.set_leader(is_leader=True)
+        remote_app = "magma-orc8r-requirer"
+        self.harness.add_relation(relation_name=self.relation_name, remote_app=remote_app)
+        with pytest.raises(ValueError) as e:
+            self.harness.charm.orchestrator_provider.set_orchestrator_information(
+                root_ca_certificate="whatever ca certificate",
+                orchestrator_address="http://orchestrator.com",
+                orchestrator_port=orchestrator_port,
+                bootstrapper_address="http://bootstrapper.com",
+                bootstrapper_port=bootstrapper_port,
+                fluentd_address="http://fluentd.com",
+                fluentd_port=fluentd_port,
+            )
+        assert str(e.value) == test_expected
