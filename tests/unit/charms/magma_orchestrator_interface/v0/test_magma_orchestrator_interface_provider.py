@@ -57,11 +57,11 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
 
         self.assertEqual(relation_data["root_ca_certificate"], root_ca_certificate)
         self.assertEqual(relation_data["orchestrator_address"], orchestrator_address)
-        self.assertEqual(relation_data["orchestrator_port"], orchestrator_port)
+        self.assertEqual(relation_data["orchestrator_port"], str(orchestrator_port))
         self.assertEqual(relation_data["bootstrapper_address"], bootstrapper_address)
-        self.assertEqual(relation_data["bootstrapper_port"], bootstrapper_port)
+        self.assertEqual(relation_data["bootstrapper_port"], str(bootstrapper_port))
         self.assertEqual(relation_data["fluentd_address"], fluentd_address)
-        self.assertEqual(relation_data["fluentd_port"], fluentd_port)
+        self.assertEqual(relation_data["fluentd_port"], str(fluentd_port))
 
     def test_given_unit_is_not_leader_and_remote_unit_joined_relation_when_set_orchestrator_information_then_runtime_error_is_raised(  # noqa: E501
         self,
