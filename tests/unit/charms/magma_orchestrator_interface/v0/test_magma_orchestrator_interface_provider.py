@@ -55,13 +55,13 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
             relation_id=relation_id, app_or_unit=self.harness.charm.app.name
         )
 
-        assert relation_data["root_ca_certificate"] == root_ca_certificate
-        assert relation_data["orchestrator_address"] == orchestrator_address
-        assert relation_data["orchestrator_port"] == str(orchestrator_port)
-        assert relation_data["bootstrapper_address"] == bootstrapper_address
-        assert relation_data["bootstrapper_port"] == str(bootstrapper_port)
-        assert relation_data["fluentd_address"] == fluentd_address
-        assert relation_data["fluentd_port"] == str(fluentd_port)
+        self.assertEqual(relation_data["root_ca_certificate"], root_ca_certificate)
+        self.assertEqual(relation_data["orchestrator_address"], orchestrator_address)
+        self.assertEqual(relation_data["orchestrator_port"], orchestrator_port)
+        self.assertEqual(relation_data["bootstrapper_address"], bootstrapper_address)
+        self.assertEqual(relation_data["bootstrapper_port"], bootstrapper_port)
+        self.assertEqual(relation_data["fluentd_address"], fluentd_address)
+        self.assertEqual(relation_data["fluentd_port"], fluentd_port)
 
     def test_given_unit_is_not_leader_and_remote_unit_joined_relation_when_set_orchestrator_information_then_runtime_error_is_raised(  # noqa: E501
         self,
@@ -80,7 +80,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
                 fluentd_address="http://fluentd.com",
                 fluentd_port=9112,
             )
-        assert str(e.value) == "Unit must be leader to set application relation data."
+        self.assertEqual(str(e.value), "Unit must be leader to set application relation data.")
 
     def test_given_unit_is_leader_and_relation_is_not_created_when_set_orchestrator_information_then_runtime_error_is_raised(  # noqa: E501
         self,
@@ -97,7 +97,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
                 fluentd_address="http://fluentd.com",
                 fluentd_port=9112,
             )
-        assert str(e.value) == "Relation orchestrator not yet created"
+        self.assertEqual(str(e.value), "Relation orchestrator not yet created")
 
     @parameterized.expand(
         [
@@ -129,4 +129,4 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
                 fluentd_address="http://fluentd.com",
                 fluentd_port=fluentd_port,
             )
-        assert str(e.value) == test_expected
+        self.assertEqual(str(e.value), test_expected)
