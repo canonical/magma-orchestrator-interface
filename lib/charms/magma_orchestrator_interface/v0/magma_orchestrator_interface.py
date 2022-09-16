@@ -54,6 +54,47 @@ class DummyMagmaOrchestratorRequirerCharm(CharmBase):
 if __name__ == "__main__":
     main(DummyMagmaOrchestratorRequirerCharm)
 ```
+
+### Provider charm
+The provider charm is the charm providing information about a Magma Orchestrator
+for another charm that requires this interface.
+
+Example:
+```python
+from ops.charm import CharmBase, RelationJoinedEvent
+from ops.main import main
+
+from lib.charms.magma_orchestrator_interface.v0.magma_orchestrator_interface import (
+    OrchestratorProvides,
+)
+
+
+class DummyMagmaOrchestratorProviderCharm(CharmBase):
+
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.orchestrator_provider = OrchestratorProvides(self, "orchestrator")
+        self.framework.observe(
+            self.on.orchestrator_relation_joined, self._on_orchestrator_relation_joined
+        )
+
+    def _on_orchestrator_relation_joined(self, event: RelationJoinedEvent):
+        if self.unit.is_leader():
+            self.orchestrator_provider.set_orchestrator_information(
+                root_ca_certificate="whatever certificate content",
+                orchestrator_address="http://orchestrator.com",
+                orchestrator_port=1234,
+                bootstrapper_address="http://bootstrapper.com",
+                bootstrapper_port=5678,
+                fluentd_address="http://fluentd.com",
+                fluentd_port=9112,
+            )
+
+
+if __name__ == "__main__":
+    main(DummyMagmaOrchestratorProviderCharm)
+```
+
 """
 
 
@@ -71,7 +112,7 @@ LIBAPI = 0
 
 # Increment this PATCH version before using `charmcraft publish-lib` or reset
 # to 0 if you are raising the major API version
-LIBPATCH = 1
+LIBPATCH = 2
 
 
 logger = logging.getLogger(__name__)
@@ -237,4 +278,68 @@ class OrchestratorRequires(Object):
             bootstrapper_port=int(remote_app_relation_data["bootstrapper_port"]),
             fluentd_address=remote_app_relation_data["fluentd_address"],
             fluentd_port=int(remote_app_relation_data["fluentd_port"]),
+        )
+
+
+class OrchestratorProvides(Object):
+    """Class to be instantiated by charms providing connectivity with Orchestrator."""
+
+    def __init__(self, charm: CharmBase, relationship_name: str):
+        """Init."""
+        super().__init__(charm, relationship_name)
+        self.relationship_name = relationship_name
+        self.charm = charm
+
+    @staticmethod
+    def port_is_valid(port_number: int) -> bool:
+        """Returns whether network port is a valid number."""
+        if port_number < 1 or port_number > 65535:
+            return False
+        return True
+
+    def set_orchestrator_information(
+        self,
+        root_ca_certificate: str,
+        orchestrator_address: str,
+        bootstrapper_address: str,
+        fluentd_address: str,
+        orchestrator_port: int = 443,
+        bootstrapper_port: int = 443,
+        fluentd_port: int = 24224,
+    ):
+        """Sets orchestrator information in application relation data.
+
+        Args:
+            root_ca_certificate: Orchestrator Root CA Certificate
+            orchestrator_address: Orchestrator address (ex. controller.yourdomain.com)
+            bootstrapper_address: Bootstrapper address (ex. bootstrapper-controller.yourdomain.com)
+            fluentd_address: Fluentd Address (ex. fluentd.yourdomain.com)
+            orchestrator_port: Orchestrator port (Default: 443)
+            bootstrapper_port: Bootstrapper port (Default: 443)
+            fluentd_port: Fluentd port (Default: 24224)
+
+        Returns:
+            None
+        """
+        if not self.charm.unit.is_leader():
+            raise RuntimeError("Unit must be leader to set application relation data.")
+        if not self.port_is_valid(orchestrator_port):
+            raise ValueError("Orchestrator port is invalid")
+        if not self.port_is_valid(bootstrapper_port):
+            raise ValueError("Bootstrapper port is invalid")
+        if not self.port_is_valid(fluentd_port):
+            raise ValueError("Fluentd port is invalid")
+        relation = self.model.get_relation(self.relationship_name)
+        if not relation:
+            raise RuntimeError(f"Relation {self.relationship_name} not yet created")
+        relation.data[self.charm.app].update(
+            {
+                "root_ca_certificate": root_ca_certificate,
+                "orchestrator_address": orchestrator_address,
+                "orchestrator_port": str(orchestrator_port),
+                "bootstrapper_address": bootstrapper_address,
+                "bootstrapper_port": str(bootstrapper_port),
+                "fluentd_address": fluentd_address,
+                "fluentd_port": str(fluentd_port),
+            }
         )
