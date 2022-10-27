@@ -112,7 +112,7 @@ LIBAPI = 0
 
 # Increment this PATCH version before using `charmcraft publish-lib` or reset
 # to 0 if you are raising the major API version
-LIBPATCH = 4
+LIBPATCH = 5
 
 
 logger = logging.getLogger(__name__)
@@ -266,8 +266,8 @@ class OrchestratorRequires(Object):
         remote_app_relation_data = relation.data[relation.app]
         if not self._relation_data_is_valid(dict(remote_app_relation_data)):
             logger.warning(
-                f"Provider relation data did not pass JSON Schema validation: "  # type: ignore[index]  # noqa: E501,W505
-                f"{event.relation.data[event.app]}"
+                f"Provider relation data did not pass JSON Schema validation: "  # noqa: E501,W505
+                f"{event.relation.data[event.app]}"  # type: ignore[index]
             )
             return
         self.on.orchestrator_available.emit(
@@ -329,17 +329,18 @@ class OrchestratorProvides(Object):
             raise ValueError("Bootstrapper port is invalid")
         if not self.port_is_valid(fluentd_port):
             raise ValueError("Fluentd port is invalid")
-        relation = self.model.get_relation(self.relationship_name)
-        if not relation:
+        relations = self.model.relations[self.relationship_name]
+        if not relations:
             raise RuntimeError(f"Relation {self.relationship_name} not yet created")
-        relation.data[self.charm.app].update(
-            {
-                "root_ca_certificate": root_ca_certificate,
-                "orchestrator_address": orchestrator_address,
-                "orchestrator_port": str(orchestrator_port),
-                "bootstrapper_address": bootstrapper_address,
-                "bootstrapper_port": str(bootstrapper_port),
-                "fluentd_address": fluentd_address,
-                "fluentd_port": str(fluentd_port),
-            }
-        )
+        for relation in relations:
+            relation.data[self.charm.app].update(
+                {
+                    "root_ca_certificate": root_ca_certificate,
+                    "orchestrator_address": orchestrator_address,
+                    "orchestrator_port": str(orchestrator_port),
+                    "bootstrapper_address": bootstrapper_address,
+                    "bootstrapper_port": str(bootstrapper_port),
+                    "fluentd_address": fluentd_address,
+                    "fluentd_port": str(fluentd_port),
+                }
+            )
