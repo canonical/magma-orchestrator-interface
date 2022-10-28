@@ -16,6 +16,14 @@ from lib.charms.magma_orchestrator_interface.v0.magma_orchestrator_interface imp
 class DummyMagmaOrchestratorProviderCharm(CharmBase):
     """Charm the service."""
 
+    DUMMY_ROOT_CA_CERT = "whatever certificate content"
+    DUMMY_ORC8R_ADDRESS = "http://orchestrator.com"
+    DUMMY_ORC8C_PORT = 1234
+    DUMMY_BOOTSTRAPPER_ADDRESS = "http://bootstrapper.com"
+    DUMMY_BOOTSTRAPPER_PORT = 5678
+    DUMMY_FLUENTD_ADDRESS = "http://fluentd.com"
+    DUMMY_FLUENTD_PORT = 9012
+
     def __init__(self, *args):
         """Init."""
         super().__init__(*args)
@@ -27,13 +35,13 @@ class DummyMagmaOrchestratorProviderCharm(CharmBase):
     def _on_orchestrator_relation_joined(self, event: RelationJoinedEvent):
         if self.unit.is_leader():
             self.orchestrator_provider.set_orchestrator_information(
-                root_ca_certificate="whatever certificate content",
-                orchestrator_address="http://orchestrator.com",
-                orchestrator_port=1234,
-                bootstrapper_address="http://bootstrapper.com",
-                bootstrapper_port=5678,
-                fluentd_address="http://fluentd.com",
-                fluentd_port=9112,
+                root_ca_certificate=self.DUMMY_ROOT_CA_CERT,
+                orchestrator_address=self.DUMMY_ORC8R_ADDRESS,
+                orchestrator_port=self.DUMMY_ORC8C_PORT,
+                bootstrapper_address=self.DUMMY_BOOTSTRAPPER_ADDRESS,
+                bootstrapper_port=self.DUMMY_BOOTSTRAPPER_PORT,
+                fluentd_address=self.DUMMY_FLUENTD_ADDRESS,
+                fluentd_port=self.DUMMY_FLUENTD_PORT,
             )
 
 
