@@ -242,13 +242,10 @@ class OrchestratorRequires(Object):
 
     @staticmethod
     def _uri_validator(uri):
-        try:
-            result = urlparse(uri)
-            if not all([result.scheme, result.netloc]):
-                raise ValueError
-            return True
-        except ValueError:
-            raise exceptions.ValidationError(f"{uri} is not a valid URI")
+        result = urlparse(uri)
+        if not all([result.scheme, result.netloc]):
+            return False
+        return True
 
     @staticmethod
     def _relation_data_is_valid(remote_app_relation_data: dict) -> bool:
