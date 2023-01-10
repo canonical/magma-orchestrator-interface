@@ -241,7 +241,7 @@ class OrchestratorRequires(Object):
         )
 
     @staticmethod
-    def _uri_validator(uri):
+    def _uri_validator(uri) -> bool:
         result = urlparse(uri)
         if not all([result.scheme, result.netloc]):
             return False
