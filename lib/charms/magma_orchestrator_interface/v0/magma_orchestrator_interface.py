@@ -99,8 +99,9 @@ if __name__ == "__main__":
 
 
 import logging
+from urllib.parse import urlparse
 
-from jsonschema import exceptions, validate  # type: ignore[import]
+from jsonschema import FormatChecker, exceptions, validate  # type: ignore[import]
 from ops.charm import CharmBase, CharmEvents, RelationChangedEvent
 from ops.framework import EventBase, EventSource, Handle, Object
 
@@ -240,9 +241,22 @@ class OrchestratorRequires(Object):
         )
 
     @staticmethod
+    def _uri_validator(uri) -> bool:
+        result = urlparse(uri)
+        if not all([result.scheme, result.netloc]):
+            return False
+        return True
+
+    @staticmethod
     def _relation_data_is_valid(remote_app_relation_data: dict) -> bool:
+        format_checker = FormatChecker()
+        format_checker.checks("uri")(OrchestratorRequires._uri_validator)
         try:
-            validate(instance=remote_app_relation_data, schema=REQUIRER_JSON_SCHEMA)
+            validate(
+                instance=remote_app_relation_data,
+                schema=REQUIRER_JSON_SCHEMA,
+                format_checker=format_checker,
+            )
             return True
         except exceptions.ValidationError:
             return False
