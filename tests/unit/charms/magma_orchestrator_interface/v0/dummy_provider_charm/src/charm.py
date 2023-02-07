@@ -17,6 +17,7 @@ class DummyMagmaOrchestratorProviderCharm(CharmBase):
     """Charm the service."""
 
     DUMMY_ROOT_CA_CERT = "whatever certificate content"
+    DUMMY_CERTIFIER_PEM = "whatever certifier pem content"
     DUMMY_ORC8R_ADDRESS = "http://orchestrator.com"
     DUMMY_ORC8C_PORT = 1234
     DUMMY_BOOTSTRAPPER_ADDRESS = "http://bootstrapper.com"
@@ -36,6 +37,7 @@ class DummyMagmaOrchestratorProviderCharm(CharmBase):
         if self.unit.is_leader():
             self.orchestrator_provider.set_orchestrator_information(
                 root_ca_certificate=self.DUMMY_ROOT_CA_CERT,
+                certifier_pem_certificate=self.DUMMY_CERTIFIER_PEM,
                 orchestrator_address=self.DUMMY_ORC8R_ADDRESS,
                 orchestrator_port=self.DUMMY_ORC8C_PORT,
                 bootstrapper_address=self.DUMMY_BOOTSTRAPPER_ADDRESS,

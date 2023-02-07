@@ -33,6 +33,7 @@ class Test(unittest.TestCase):
         )
 
         root_ca_certificate = "whatever certificate"
+        certifier_pem_certificate = "whatever certifier pem"
         orchestrator_address = "http://orchestrator.com"
         orchestrator_port = 123
         bootstrapper_address = "http://bootstrapper.com"
@@ -41,6 +42,7 @@ class Test(unittest.TestCase):
         fluentd_port = 789
         remote_app_relation_data = {
             "root_ca_certificate": root_ca_certificate,
+            "certifier_pem_certificate": certifier_pem_certificate,
             "orchestrator_address": orchestrator_address,
             "orchestrator_port": str(orchestrator_port),
             "bootstrapper_address": bootstrapper_address,
@@ -56,6 +58,9 @@ class Test(unittest.TestCase):
         args, _ = patch_on_orchestrator_available.call_args
         orchestrator_available_event = args[0]
         self.assertEqual(orchestrator_available_event.root_ca_certificate, root_ca_certificate)
+        self.assertEqual(
+            orchestrator_available_event.certifier_pem_certificate, certifier_pem_certificate
+        )
         self.assertEqual(orchestrator_available_event.orchestrator_address, orchestrator_address)
         self.assertEqual(orchestrator_available_event.orchestrator_port, orchestrator_port)
         self.assertEqual(orchestrator_available_event.bootstrapper_address, bootstrapper_address)
@@ -73,6 +78,7 @@ class Test(unittest.TestCase):
         )
 
         root_ca_certificate = "whatever certificate"
+        certifier_pem_certificate = "whatever certifier pem"
         wrong_orchestrator_address = "not a url"
         orchestrator_port = 123
         bootstrapper_address = "http://bootstrapper.com"
@@ -81,6 +87,7 @@ class Test(unittest.TestCase):
         fluentd_port = 789
         remote_app_relation_data = {
             "root_ca_certificate": root_ca_certificate,
+            "certifier_pem_certificate": certifier_pem_certificate,
             "orchestrator_address": wrong_orchestrator_address,
             "orchestrator_port": str(orchestrator_port),
             "bootstrapper_address": bootstrapper_address,
