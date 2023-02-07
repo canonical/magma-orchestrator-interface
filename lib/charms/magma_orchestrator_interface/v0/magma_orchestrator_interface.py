@@ -113,7 +113,7 @@ LIBAPI = 0
 
 # Increment this PATCH version before using `charmcraft publish-lib` or reset
 # to 0 if you are raising the major API version
-LIBPATCH = 6
+LIBPATCH = 7
 
 
 logger = logging.getLogger(__name__)
@@ -144,21 +144,18 @@ REQUIRER_JSON_SCHEMA = {
         },
         "orchestrator_address": {
             "type": "string",
-            "format": "uri",
         },
         "orchestrator_port": {
             "type": "string",
         },
         "bootstrapper_address": {
             "type": "string",
-            "format": "uri",
         },
         "bootstrapper_port": {
             "type": "string",
         },
         "fluentd_address": {
             "type": "string",
-            "format": "uri",
         },
         "fluentd_port": {
             "type": "string",
