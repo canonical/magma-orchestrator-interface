@@ -17,6 +17,7 @@ testing.SIMULATE_CAN_CONNECT = True
 
 DUMMY_PROVIDER_CHARM = "tests.unit.charms.magma_orchestrator_interface.v0.dummy_provider_charm.src.charm.DummyMagmaOrchestratorProviderCharm"  # noqa: E501
 TEST_ROOT_CA_CERT = "whatever ca certificate"
+TEST_CERTIFIER_PEM_CERT = "whatever certifier pem"
 TEST_ORC8R_ADDRESS = "orchestrator.com"
 TEST_ORC8R_PORT = 1111
 TEST_BOOTSTRAPPER_ADDRESS = "bootstrapper.com"
@@ -33,6 +34,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
         self.harness.begin()
 
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_ROOT_CA_CERT", new_callable=PropertyMock)
+    @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_CERTIFIER_PEM", new_callable=PropertyMock)
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_ORC8R_ADDRESS", new_callable=PropertyMock)
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_ORC8C_PORT", new_callable=PropertyMock)
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_BOOTSTRAPPER_ADDRESS", new_callable=PropertyMock)
@@ -47,12 +49,13 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
         patched_bootstrapper_address,
         patched_orc8r_port,
         patched_orc8r_address,
+        patched_certifier_pem,
         patched_root_ca,
     ):
-
         self.harness.set_leader(is_leader=True)
         remote_app = "magma-orc8r-requirer"
         patched_root_ca.return_value = TEST_ROOT_CA_CERT
+        patched_certifier_pem.return_value = TEST_CERTIFIER_PEM_CERT
         patched_orc8r_address.return_value = TEST_ORC8R_ADDRESS
         patched_orc8r_port.return_value = TEST_ORC8R_PORT
         patched_bootstrapper_address.return_value = TEST_BOOTSTRAPPER_ADDRESS
@@ -69,6 +72,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
             relation_id=relation_id, app_or_unit=self.harness.charm.app.name
         )
         self.assertEqual(relation_data["root_ca_certificate"], TEST_ROOT_CA_CERT)
+        self.assertEqual(relation_data["certifier_pem_certificate"], TEST_CERTIFIER_PEM_CERT)
         self.assertEqual(relation_data["orchestrator_address"], TEST_ORC8R_ADDRESS)
         self.assertEqual(relation_data["orchestrator_port"], str(TEST_ORC8R_PORT))
         self.assertEqual(relation_data["bootstrapper_address"], TEST_BOOTSTRAPPER_ADDRESS)
@@ -77,6 +81,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
         self.assertEqual(relation_data["fluentd_port"], str(TEST_FLUENTD_PORT))
 
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_ROOT_CA_CERT", new_callable=PropertyMock)
+    @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_CERTIFIER_PEM", new_callable=PropertyMock)
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_ORC8R_ADDRESS", new_callable=PropertyMock)
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_ORC8C_PORT", new_callable=PropertyMock)
     @patch(f"{DUMMY_PROVIDER_CHARM}.DUMMY_BOOTSTRAPPER_ADDRESS", new_callable=PropertyMock)
@@ -91,13 +96,14 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
         patched_bootstrapper_address,
         patched_orc8r_port,
         patched_orc8r_address,
+        patched_certifier_pem,
         patched_root_ca,
     ):
-
         self.harness.set_leader(is_leader=True)
         remote_app = "magma-orc8r-requirer"
         remote_app_2 = "another-magma-orc8r-requirer"
         patched_root_ca.return_value = TEST_ROOT_CA_CERT
+        patched_certifier_pem.return_value = TEST_CERTIFIER_PEM_CERT
         patched_orc8r_address.return_value = TEST_ORC8R_ADDRESS
         patched_orc8r_port.return_value = TEST_ORC8R_PORT
         patched_bootstrapper_address.return_value = TEST_BOOTSTRAPPER_ADDRESS
@@ -118,6 +124,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
             relation_id=relation_one_id, app_or_unit=self.harness.charm.app.name
         )
         self.assertEqual(relation_one_data["root_ca_certificate"], TEST_ROOT_CA_CERT)
+        self.assertEqual(relation_one_data["certifier_pem_certificate"], TEST_CERTIFIER_PEM_CERT)
         self.assertEqual(relation_one_data["orchestrator_address"], TEST_ORC8R_ADDRESS)
         self.assertEqual(relation_one_data["orchestrator_port"], str(TEST_ORC8R_PORT))
         self.assertEqual(relation_one_data["bootstrapper_address"], TEST_BOOTSTRAPPER_ADDRESS)
@@ -129,6 +136,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
             relation_id=relation_two_id, app_or_unit=self.harness.charm.app.name
         )
         self.assertEqual(relation_two_data["root_ca_certificate"], TEST_ROOT_CA_CERT)
+        self.assertEqual(relation_two_data["certifier_pem_certificate"], TEST_CERTIFIER_PEM_CERT)
         self.assertEqual(relation_two_data["orchestrator_address"], TEST_ORC8R_ADDRESS)
         self.assertEqual(relation_two_data["orchestrator_port"], str(TEST_ORC8R_PORT))
         self.assertEqual(relation_two_data["bootstrapper_address"], TEST_BOOTSTRAPPER_ADDRESS)
@@ -146,6 +154,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
         with pytest.raises(RuntimeError) as e:
             self.harness.charm.orchestrator_provider.set_orchestrator_information(
                 root_ca_certificate=TEST_ROOT_CA_CERT,
+                certifier_pem_certificate=TEST_CERTIFIER_PEM_CERT,
                 orchestrator_address=TEST_ORC8R_ADDRESS,
                 orchestrator_port=TEST_ORC8R_PORT,
                 bootstrapper_address=TEST_BOOTSTRAPPER_ADDRESS,
@@ -163,6 +172,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
         with pytest.raises(RuntimeError) as e:
             self.harness.charm.orchestrator_provider.set_orchestrator_information(
                 root_ca_certificate=TEST_ROOT_CA_CERT,
+                certifier_pem_certificate=TEST_CERTIFIER_PEM_CERT,
                 orchestrator_address=TEST_ORC8R_ADDRESS,
                 orchestrator_port=TEST_ORC8R_PORT,
                 bootstrapper_address=TEST_BOOTSTRAPPER_ADDRESS,
@@ -195,6 +205,7 @@ class TestMagmaOrchestratorProvider(unittest.TestCase):
         with pytest.raises(ValueError) as e:
             self.harness.charm.orchestrator_provider.set_orchestrator_information(
                 root_ca_certificate=TEST_ROOT_CA_CERT,
+                certifier_pem_certificate=TEST_CERTIFIER_PEM_CERT,
                 orchestrator_address=TEST_ORC8R_ADDRESS,
                 orchestrator_port=orchestrator_port,
                 bootstrapper_address=TEST_BOOTSTRAPPER_ADDRESS,
