@@ -34,11 +34,11 @@ class Test(unittest.TestCase):
 
         root_ca_certificate = "whatever certificate"
         certifier_pem_certificate = "whatever certifier pem"
-        orchestrator_address = "http://orchestrator.com"
+        orchestrator_address = "orchestrator.com"
         orchestrator_port = 123
-        bootstrapper_address = "http://bootstrapper.com"
+        bootstrapper_address = "bootstrapper.com"
         bootstrapper_port = 456
-        fluentd_address = "http://fluentd.com"
+        fluentd_address = "fluentd.com"
         fluentd_port = 789
         remote_app_relation_data = {
             "root_ca_certificate": root_ca_certificate,
@@ -69,39 +69,6 @@ class Test(unittest.TestCase):
         self.assertEqual(orchestrator_available_event.fluentd_port, fluentd_port)
 
     @patch(f"{BASE_CHARM_DIR}._on_orchestrator_available")
-    def test_given_orchestrator_information_in_relation_data_when_relation_changed_and_schema_validation_fails_then_orchestrator_available_event_is_not_emitted(  # noqa: E501
-        self, patch_on_orchestrator_available
-    ):
-        remote_app = "magma-orc8r-provider"
-        relation_id = self.harness.add_relation(
-            relation_name=self.relation_name, remote_app=remote_app
-        )
-
-        root_ca_certificate = "whatever certificate"
-        certifier_pem_certificate = "whatever certifier pem"
-        wrong_orchestrator_address = "not a url"
-        orchestrator_port = 123
-        bootstrapper_address = "http://bootstrapper.com"
-        bootstrapper_port = 456
-        fluentd_address = "http://fluentd.com"
-        fluentd_port = 789
-        remote_app_relation_data = {
-            "root_ca_certificate": root_ca_certificate,
-            "certifier_pem_certificate": certifier_pem_certificate,
-            "orchestrator_address": wrong_orchestrator_address,
-            "orchestrator_port": str(orchestrator_port),
-            "bootstrapper_address": bootstrapper_address,
-            "bootstrapper_port": str(bootstrapper_port),
-            "fluentd_address": fluentd_address,
-            "fluentd_port": str(fluentd_port),
-        }
-        self.harness.update_relation_data(
-            relation_id=relation_id, app_or_unit=remote_app, key_values=remote_app_relation_data
-        )
-
-        patch_on_orchestrator_available.assert_not_called()
-
-    @patch(f"{BASE_CHARM_DIR}._on_orchestrator_available")
     def test_given_orchestrator_information_not_in_relation_data_when_relation_changed_then_orchestrator_available_event_not_emitted(  # noqa: E501
         self, patch_on_orchestrator_available
     ):
@@ -124,9 +91,9 @@ class Test(unittest.TestCase):
         relation_id = self.harness.add_relation(
             relation_name=self.relation_name, remote_app=remote_app
         )
-        orchestrator_address = "http://orchestrator.com"
+        orchestrator_address = "orchestrator.com"
         orchestrator_port = 123
-        bootstrapper_address = "http://bootstrapper.com"
+        bootstrapper_address = "bootstrapper.com"
         bootstrapper_port = 456
         remote_app_relation_data = {
             "orchestrator_address": orchestrator_address,
